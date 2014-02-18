@@ -4,25 +4,23 @@ function isObject(o) { return o && typeof o === 'object'}
 function isFunction(f) { return f && typeof f === 'function'}
 
 function Promise() {
-  var state = 'pending', 
+  var state     = 'pending', 
       callbacks = [],
       value
-  this.then = function(onFulfilled, onRejected) {
+  function then(onFulfilled, onRejected) {
     var p = new Promise()
     function callback() {
       var ret = value, 
-          fn = state === 'resolved' ? 'resolve' : 'reject', 
-          cb = state === 'resolved' ? onFulfilled : onRejected
+          fn  = state === 'resolved' ? 'resolve' : 'reject', 
+          cb  = state === 'resolved' ? onFulfilled : onRejected
       try {
         if (isFunction(cb)) {
           ret = cb(value)
-          fn = 'resolve'
+          fn  = 'resolve'
         }
-        if (ret === p) 
-          p.reject(new TypeError('Can\'t resolve itself'))
-        else if (ret instanceof Promise)
-          ret.then(p.resolve, p.reject)
-        else p[fn](ret)
+        if (ret === p) return p.reject(new TypeError('Can\'t resolve itself'))
+        if (ret instanceof Promise) return ret.then(p.resolve, p.reject)
+        p[fn](ret)
       } catch (e) {
         p.reject(e)
       }
@@ -31,16 +29,17 @@ function Promise() {
     else nextTick(callback)
     return p
   }
-  function handle(_state) {
-    return function done(_value) {
+  function complete(_state) {
+    return function(_value) {
       if (state !== 'pending') return
       state = _state
       value = _value
       for (var cb; cb = callbacks.shift();) nextTick(cb)
     }
   }
-  this.resolve = handle('resolved')
-  this.reject = handle('rejected')
+  this.then    = then
+  this.resolve = complete('resolved')
+  this.reject  = complete('rejected')
 }
 
 if (isObject(module) && isObject(module.exports)) 
