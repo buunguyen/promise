@@ -1,0 +1,13 @@
+{
+  "name": "promise",
+  "version": "1.0.0",
+  "description": "Minimal Promise Implementation",
+  "devDependencies": {
+    "promises-aplus-tests": "*"
+  },
+  "scripts": {
+    "test": "promises-aplus-tests aplus-adapter"
+  },
+  "repository": "https://github.com/buunguyen/aplus-adapter",
+  "author": "Buu Nguyen"
+}
