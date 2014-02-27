@@ -7,4 +7,6 @@ var p = new Promise();
 p.then(callback, errback);
 p.resolve(value);
 p.reject(value);
+
+Promise.all(p1, p2).then(callback, errback)
 ```
