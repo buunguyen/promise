@@ -6,8 +6,7 @@
     function then(onFulfill, onReject) {
       var p = new Promise()
       function callback() {
-        var fn = state === 'resolved' ? 'resolve' : 'reject', 
-            cb = state === 'resolved' ? onFulfill : onReject
+        var cb = state === 'resolved' ? onFulfill : onReject
         if (typeof cb === 'function') {
           try {
             var ret = cb(value)
@@ -17,7 +16,7 @@
           } catch (e) {
             p.reject(e)
           }
-        } else p[fn](value)
+        } else p[state === 'resolved' ? 'resolve' : 'reject'](value)
       }
       if (state === 'pending') callbacks.push(callback)
       else nextTick(callback)
