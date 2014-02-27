@@ -3,10 +3,10 @@
     var state     = 'pending', 
         callbacks = [],
         value
-    function then(onFulfill, onReject) {
+    function then(onFulfilled, onRejected) {
       var p = new Promise()
       function callback() {
-        var cb = state === 'resolved' ? onFulfill : onReject
+        var cb = state === 'resolved' ? onFulfilled : onRejected
         if (typeof cb === 'function') {
           try {
             var ret = cb(value)
