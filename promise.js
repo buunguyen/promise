@@ -38,16 +38,18 @@
   }
 
   Promise.all = function(promises) {
-    var p = new Promise(), 
-        values = []
-    ;(function next(index) {
-      promises[index].then(function(value) {
-        values[index++] = value
-        if (index < promises.length) next(index)
-        else p.resolve(values)
-      }, p.reject)
-    })(0)
-    return p
+    var cp     = new Promise(), 
+        values = [],
+        remain = promises.length
+    for (var i = 0; promises[i]; i++) {
+      ;(function(i) {
+        promises[i].then(function(value) {
+          values[i] = value
+          if (--remain === 0) cp.resolve(values)
+        }, cp.reject)
+      })(i)
+    }
+    return cp
   }
 
   if (typeof module !== 'undefined' && module.exports) {
