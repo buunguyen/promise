@@ -1,4 +1,4 @@
-Promise = require("./promise")
+Promise = require("./promise.full")
 
 exports.deferred = function() {
   var p = new Promise()

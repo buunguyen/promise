@@ -19,14 +19,38 @@
         var cb = state === 'fulfilled' ? onFulfilled : onRejected
         if (typeof cb === 'function') {
           try {
-            var ret = cb(value)
-            if (ret === p) return p.reject(new TypeError('Cannot resolve itself'))
-            if (ret instanceof Promise) return ret.then(p.resolve, p.reject)
-            p.resolve(ret)
+            resolve(p, cb(value))
           } catch (e) {
             p.reject(e)
           }
-        } else p[state === 'fulfilled' ? 'resolve' : 'reject'](value)
+        } 
+        else if (state === 'fulfilled') resolve(p, value)
+        else p.reject(value)
+      }
+
+      function resolve(p, x) {
+        if (p === x) p.reject(new TypeError('Cannot resolve itself'))
+        else if (x && (typeof x === 'object' || typeof x === 'function')) {
+          var called = false
+          try {
+            var then = x.then
+            if (typeof then === 'function') {
+              then.call(x, 
+                function(y) {
+                  called || resolve(p, y)
+                  called = true
+                },
+                function(r) {
+                  called || p.reject(r)
+                  called = true
+                }
+              )
+            } else p.resolve(x)
+          } catch(e) {
+            called || p.reject(e)
+          }
+        } 
+        else p.resolve(x)
       }
     }
 
@@ -39,7 +63,7 @@
           for (var cb; cb = callbacks.shift();) cb()
         })
       }
-    }
+    }  
   }
 
   // more
