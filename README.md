@@ -1,6 +1,6 @@
 promise
 =======
-A+ promise implementation that is described in this [article](url). The file `promise.js` is the one discussed in the article. For the sake of simplicity, it implements most of A+, except for the compatibility requirement with other promise libraries (section 2.3.3). For a full implementation of A+, look at `promise.full.js`.
+A+ promise implementation that is described in this [article](url). The file `promise.js` is the one discussed in the article, it implements most of A+, except for the compatibility requirement with other promise libraries (section 2.3.3). For the full implementation of A+, look at `promise.full.js`.
 
 #### Usage:
 ```javascript
